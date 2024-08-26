@@ -1,0 +1,22 @@
+messages:
+  # Login window
+  login-title: "Login"
+  login-password-title: "Password"
+  login-password-placeholder: "Please enter your password"
+  wrong-password: "&cIncorrect password, please try again"
+  # Registration window
+  reg-title: "Register"
+  reg-password-title: "Password"
+  reg-password-placeholder: "Please enter your password"
+  reg-confirmPassword-title: "Confirm Password"
+  reg-confirmPassword-placeholder: "Please enter your password again"
+  passwords-not-match: "&cPasswords do not match, please try again"
+  password-empty: "&cPassword cannot be empty, please try again"
+  # General prompts
+  close-window: "&cWindow closed, login/registration terminated"
+
+# Window send delay, too fast may result in the player not being fully loaded in time. Unit: ticks
+delay-time: 45
+
+# Log output for Bedrock players during login and window sending, used to determine delay
+debug: false

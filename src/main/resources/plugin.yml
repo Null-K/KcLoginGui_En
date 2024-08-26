@@ -1,0 +1,8 @@
+main: com.puddingkc.KcLoginGui
+name: KcLoginGui
+version: 2.0.1
+api-version: "1.20"
+author: "PuddingKC"
+depend:
+  - "floodgate"
+  - "AuthMe"
