@@ -1,5 +1,8 @@
 package com.puddingkc;
 
+import com.cjcrafter.foliascheduler.FoliaCompatibility;
+import com.cjcrafter.foliascheduler.ServerImplementation;
+import com.cjcrafter.foliascheduler.util.ServerVersions;
 import fr.xephi.authme.api.v3.AuthMeApi;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -17,6 +20,7 @@ public class KcLoginGui extends JavaPlugin implements Listener {
 
     private long delayTime;
     private boolean debugMode;
+    private boolean isFolia;
     private FileConfiguration config;
 
     @Override
@@ -34,6 +38,11 @@ public class KcLoginGui extends JavaPlugin implements Listener {
             getLogger().warning("The required plugin AuthMe is missing, plugin failed to enable");
             getServer().getPluginManager().disablePlugin(this);
             return;
+        }
+
+        if (ServerVersions.isFolia()) {
+            isFolia = ServerVersions.isFolia();
+            getLogger().info("Currently running in a Folia environment, compatibility enabled.");
         }
 
         loadConfig();
@@ -75,15 +84,25 @@ public class KcLoginGui extends JavaPlugin implements Listener {
     }
 
     private void sendFormWithDelay(Player player, FloodgatePlayer floodgatePlayer, CustomForm.Builder formBuilder) {
-        new BukkitRunnable() {
-            @Override
-            public void run() {
+        if (isFolia) {
+            ServerImplementation scheduler = new FoliaCompatibility(this).getServerImplementation();
+            scheduler.async().runDelayed(task -> {
                 if (!AuthMeApi.getInstance().isAuthenticated(player)) {
                     floodgatePlayer.sendForm(formBuilder.build());
-                    sendDebugLog(player.getName() + " Window " + formBuilder + " has been sent");
+                    sendDebugLog(player.getName() + " 窗口 " + formBuilder + " 已发送");
                 }
-            }
-        }.runTaskLater(this, delayTime);
+            }, delayTime);
+        } else {
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    if (!AuthMeApi.getInstance().isAuthenticated(player)) {
+                        floodgatePlayer.sendForm(formBuilder.build());
+                        sendDebugLog(player.getName() + " Window " + formBuilder + " has been sent");
+                    }
+                }
+            }.runTaskLater(this, delayTime);
+        }
     }
 
     private CustomForm.Builder getLoginForm(Player player) {
