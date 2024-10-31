@@ -89,7 +89,7 @@ public class KcLoginGui extends JavaPlugin implements Listener {
             scheduler.async().runDelayed(task -> {
                 if (!AuthMeApi.getInstance().isAuthenticated(player)) {
                     floodgatePlayer.sendForm(formBuilder.build());
-                    sendDebugLog(player.getName() + " 窗口 " + formBuilder + " 已发送");
+                    sendDebugLog(player.getName() + " Window " + formBuilder + " has been sent");
                 }
             }, delayTime);
         } else {
